@@ -24,7 +24,9 @@ module karatsuba_node_%d #(
   wire [N+N%2-1 : 0] y;
   wire [N+N%2+1 : 0] z;
 
-  %s // recursive instantiation here
+  %s multiplier_x (.u(a), .v(c), .r(x));
+  %s multiplier_y (.u(b), .v(d), .r(y));
+  %s multiplier_z (.u(z_op1), .v(z_op2), .r(z));
 
   reg [        N-N%2-1 : 0] x_neg;
   reg [        N+N%2-1 : 0] y_neg;
