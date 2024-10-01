@@ -28,17 +28,13 @@ module karatsuba_node_%d #(
   %s multiplier_y (.u(b), .v(d), .r(y));
   %s multiplier_z (.u(z_op1), .v(z_op2), .r(z));
 
-  reg [        N-N%%2-1 : 0] x_neg;
-  reg [        N+N%%2-1 : 0] y_neg;
   reg [          2*N-1 : 0] x_shifted;
   reg [        N+N%%2+1 : 0] z_minx_miny;
   reg [N+N/2+2*(N%%2)+1 : 0] z_minx_miny_shifted;
 
   always @* begin
     x_shifted           = { x, { N+N%%2 {1'b0} } };
-    x_neg               = ~x + 1;
-    y_neg               = ~y + 1;
-    z_minx_miny         = z + x_neg + y_neg;
+    z_minx_miny         = z - x - y;
     z_minx_miny_shifted = { z_minx_miny, { N/2+N%%2 {1'b0} } };
     r                   = x_shifted + z_minx_miny_shifted + y;
   end
