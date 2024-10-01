@@ -1,9 +1,11 @@
-module karatsuba_leaf (
-  input        u, v,
+module karatsuba_leaf_%d #(
+  parameter N = %d
+) (
+  input  [  N-1:0] u, v,
 
-  output [1:0] r
+  output [2*N-1:0] r
 );
 
-  assign r = u & v;
+  assign r = u * v;
 
 endmodule

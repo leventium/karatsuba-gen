@@ -16,25 +16,17 @@ class KaratsubaGenarator {
     std::string verilog_description;
   };
 
-  const std::string leaf1x1{"module karatsuba_leaf (\n"
-                            "  input        u, v,\n"
-                            "\n"
-                            "  output [1:0] r\n"
-                            ");\n"
-                            "\n"
-                            "  assign r = u & v;\n"
-                            "\n"
-                            "endmodule\n"};
-
-  const std::string leaf2x2{"module karatsuba_leaf_2x2 (\n"
-                            "  input  [1:0] u, v,\n"
-                            "\n"
-                            "  output [3:0] r\n"
-                            ");\n"
-                            "\n"
-                            "  assign r = u * v;\n"
-                            "\n"
-                            "endmodule\n"};
+  const std::string leaf{"module karatsuba_leaf_%d #(\n"
+                         "  parameter N = %d\n"
+                         ") (\n"
+                         "  input  [  N-1:0] u, v,\n"
+                         "\n"
+                         "  output [2*N-1:0] r\n"
+                         ");\n"
+                         "\n"
+                         "  assign r = u * v;\n"
+                         "\n"
+                         "endmodule\n"};
 
   const std::string node{
       "module karatsuba_node_%d #(\n"
@@ -84,12 +76,12 @@ class KaratsubaGenarator {
       "\n"
       "endmodule\n"};
 
-  std::vector<RTLKaratsubaNode> mem{{1, "karatsuba_node_1", leaf1x1},
-                                    {2, "karatsuba_node_2", leaf2x2}};
+  std::vector<RTLKaratsubaNode> mem;
 
   std::string helper(int n);
 
 public:
+  KaratsubaGenarator();
   RTLModule get_karatsuba_multiplier(int n);
 };
 

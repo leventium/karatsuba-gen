@@ -4,6 +4,19 @@
 #include <sstream>
 #include <string>
 
+KaratsubaGenarator::KaratsubaGenarator() {
+  for (int i = 1; i <= 3; ++i) {
+    char tmp_buff[500];
+    std::snprintf(tmp_buff, 500, leaf.c_str(), i, i);
+    std::string module_description(tmp_buff);
+
+    std::snprintf(tmp_buff, 500, "karatsuba_leaf_%d", i);
+    std::string module_name(tmp_buff);
+
+    mem.push_back(RTLKaratsubaNode{i, module_name, module_description});
+  }
+}
+
 std::string KaratsubaGenarator::helper(int n) {
   for (const RTLKaratsubaNode &el : mem)
     if (el.length == n)
@@ -16,7 +29,6 @@ std::string KaratsubaGenarator::helper(int n) {
   char *formated_node = new char[2000];
   std::snprintf(formated_node, 2000, node.c_str(), n, n, multiplier_x.c_str(),
                 multiplier_y.c_str(), multiplier_z.c_str());
-
   std::string module_description(formated_node);
   delete[] formated_node;
 
