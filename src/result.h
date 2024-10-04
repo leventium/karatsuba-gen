@@ -14,12 +14,7 @@ public:
     val_ = val;
     is_err = false;
   };
-  ~Result() {
-    if (is_err)
-      err_.~E();
-    else
-      val_.~T();
-  };
+  ~Result() = default;
   static Result error(E err) {
     Result obj;
     obj.err_ = err;
