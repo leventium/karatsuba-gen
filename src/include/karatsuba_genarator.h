@@ -1,7 +1,6 @@
 #ifndef INCLUDE_SRC_KARATSUBA_GENARATOR_H_
 #define INCLUDE_SRC_KARATSUBA_GENARATOR_H_
 
-#include "result.h"
 #include <string>
 #include <vector>
 
@@ -9,8 +8,6 @@ struct RTLModule {
   std::string name;
   std::string verilog_description;
 };
-
-enum class GenerateError { BelowOne };
 
 class KaratsubaGenarator {
   struct RTLKaratsubaNode {
@@ -30,7 +27,7 @@ class KaratsubaGenarator {
 
 public:
   KaratsubaGenarator();
-  Result<RTLModule, GenerateError> get_karatsuba_multiplier(int n);
+  int get_karatsuba_multiplier(RTLModule &res, int n);
 };
 
 #endif // INCLUDE_SRC_KARATSUBA_GENARATOR_H_

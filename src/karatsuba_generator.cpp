@@ -1,5 +1,4 @@
 #include "karatsuba_genarator.h"
-#include "result.h"
 #include <algorithm>
 #include <cstdio>
 #include <sstream>
@@ -129,10 +128,9 @@ std::string KaratsubaGenarator::helper(int n) {
   return module_name;
 }
 
-Result<RTLModule, GenerateError>
-KaratsubaGenarator::get_karatsuba_multiplier(int n) {
+int KaratsubaGenarator::get_karatsuba_multiplier(RTLModule &res, int n) {
   if (n < 1)
-    return Result<RTLModule, GenerateError>::error(GenerateError::BelowOne);
+    return 1;
   std::string top_module_name = helper(n);
   std::sort(mem.begin(), mem.end(),
             [](const RTLKaratsubaNode &a, const RTLKaratsubaNode &b) {
@@ -141,5 +139,8 @@ KaratsubaGenarator::get_karatsuba_multiplier(int n) {
   std::stringstream ss;
   for (const RTLKaratsubaNode &node : mem)
     ss << node.verilog_description << "\n";
-  return Result<RTLModule, GenerateError>({top_module_name, ss.str()});
+
+  res.name = top_module_name;
+  res.verilog_description = ss.str();
+  return 0;
 }
