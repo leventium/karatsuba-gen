@@ -97,6 +97,33 @@ const std::string KaratsubaGenarator::node(
     "\n"
     "endmodule\n");
 
+const std::string KaratsubaGenarator::tb(
+    "`timescale 1ns/1ps\n"
+    "module tb #(\n"
+    "  parameter N = %d\n"
+    ");\n"
+    "\n"
+    "reg  [  N-1:0] a, b;\n"
+    "wire [N*2-1:0] c;\n"
+    "reg  [N*2-1:0] expected;\n"
+    "\n"
+    "%s mult (.u(a), .v(b), .r(c));\n"
+    "\n"
+    "initial begin\n"
+    "  for (integer i = 0; i < 3; i = i + 1) begin\n"
+    "    a = $unsigned($random) %% (2**N);\n"
+    "    b = $unsigned($random) %% (2**N);\n"
+    "    #10;\n"
+    "    expected = a * b;\n"
+    "    if (c == expected)\n"
+    "      $display(\"%%d * %%d = %%d  --  Ok.\", a, b, c);\n"
+    "    else\n"
+    "      $display(\"%%d * %%d = %%d ($d)  --  Fail.\", a, b, c, expected);\n"
+    "  end\n"
+    "end\n"
+    "\n"
+    "endmodule\n");
+
 KaratsubaGenarator::KaratsubaGenarator() {
   mem.push_back({1, "karatsuba_leaf1", leaf1});
   mem.push_back({2, "karatsuba_leaf2", leaf2});
@@ -128,7 +155,7 @@ std::string KaratsubaGenarator::helper(int n) {
   return module_name;
 }
 
-int KaratsubaGenarator::get_karatsuba_multiplier(RTLModule &res, int n) {
+int KaratsubaGenarator::generate_multiplier(RTLModule &res, int n) {
   if (n < 1)
     return 1;
   std::string top_module_name = helper(n);
@@ -142,5 +169,18 @@ int KaratsubaGenarator::get_karatsuba_multiplier(RTLModule &res, int n) {
 
   res.name = top_module_name;
   res.verilog_description = ss.str();
+  return 0;
+}
+
+int KaratsubaGenarator::generate_testbench(RTLModule &res, int n,
+                                           const std::string &top_name) {
+  if (n < 1)
+    return 1;
+
+  char buff[700];
+  std::snprintf(buff, 700, tb.c_str(), n, top_name.c_str());
+
+  res.name = "tb";
+  res.verilog_description = buff;
   return 0;
 }

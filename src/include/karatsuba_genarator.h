@@ -20,6 +20,7 @@ class KaratsubaGenarator {
   static const std::string leaf2;
   static const std::string leaf3;
   static const std::string node;
+  static const std::string tb;
 
   std::vector<RTLKaratsubaNode> mem;
 
@@ -27,7 +28,8 @@ class KaratsubaGenarator {
 
 public:
   KaratsubaGenarator();
-  int get_karatsuba_multiplier(RTLModule &res, int n);
+  int generate_multiplier(RTLModule &res, int n);
+  int generate_testbench(RTLModule &res, int n, const std::string &top_name);
 };
 
 #endif // INCLUDE_SRC_KARATSUBA_GENARATOR_H_

@@ -10,20 +10,29 @@ int main(int argc, char **argv) {
 
   int n = std::atoi(argv[1]);
   KaratsubaGenarator gen;
-  RTLModule res;
+  RTLModule multiplier;
 
-  int err = gen.get_karatsuba_multiplier(res, n);
+  int err = gen.generate_multiplier(multiplier, n);
   if (err) {
     std::cout << "N must be integer greater than 0.\nDone.\n";
     return 1;
   }
 
   std::ofstream file;
-  file.open(res.name + ".v");
-  file << res.verilog_description;
+  file.open(multiplier.name + ".v");
+  file << multiplier.verilog_description;
   file.close();
 
-  std::cout << "Top-level module: " << res.name << std::endl;
+  RTLModule testbench;
+  err = gen.generate_testbench(testbench, n, multiplier.name);
+
+  file.open("tb.v");
+  file << testbench.verilog_description;
+  file.close();
+
+  std::cout << "Top-level module: " << multiplier.name << std::endl;
+  std::cout << "Testbench: tb.v" << std::endl;
+  std::cout << "Done." << std::endl;
 
   return 0;
 }
