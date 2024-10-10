@@ -7,7 +7,7 @@
 const std::string KaratsubaGenarator::leaf1("module karatsuba_leaf1 (\n"
                                             "  input        u, v,\n"
                                             "\n"
-                                            "  output [1:0] r;\n"
+                                            "  output [1:0] r\n"
                                             ");\n"
                                             "\n"
                                             "assign r = u & v;\n"
