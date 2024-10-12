@@ -4,11 +4,9 @@ SRCS := $(wildcard src/*.cpp)
 
 OBJS := $(SRCS:.cpp=.o)
 
-INCLUDE_DIR := src/include
-
 CXX := g++
 
-CXXFLAGS := -std=c++17 -I$(INCLUDE_DIR)
+CXXFLAGS := -std=c++17
 
 LDFLAGS :=
 

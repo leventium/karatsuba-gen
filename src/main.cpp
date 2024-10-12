@@ -1,4 +1,4 @@
-#include "karatsuba_genarator.h"
+#include "karatsuba_generator.h"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
