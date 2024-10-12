@@ -20,7 +20,7 @@ initial begin
     if (c == expected)
       $display("%%d * %%d = %%d  --  Ok.", a, b, c);
     else
-      $display("%%d * %%d = %%d ($d)  --  Fail.", a, b, c, expected);
+      $display("%%d * %%d = %%d (%%d)  --  Fail.", a, b, c, expected);
   end
 end
 

@@ -120,7 +120,7 @@ const std::string KaratsubaGenarator::tb(
     "    if (c == expected)\n"
     "      $display(\"%%d * %%d = %%d  --  Ok.\", a, b, c);\n"
     "    else\n"
-    "      $display(\"%%d * %%d = %%d ($d)  --  Fail.\", a, b, c, expected);\n"
+    "      $display(\"%%d * %%d = %%d (%%d)  --  Fail.\", a, b, c, expected);\n"
     "  end\n"
     "end\n"
     "\n"
