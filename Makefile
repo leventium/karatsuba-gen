@@ -20,6 +20,10 @@ build: $(OBJS)
 	@echo "\n\nRun: ./$(TARGET) N"
 
 clean:
-	rm -rf src/*.o $(TARGET)
+	rm -rf src/*.o $(TARGET) test_app
 
-.PHONY: clean, build
+test: build
+	iverilog -g2005 -stb -otest_app *.v
+	@echo "\n\nFor test run: ./test_app"
+
+.PHONY: clean, build, test

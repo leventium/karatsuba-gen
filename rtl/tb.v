@@ -9,8 +9,10 @@ reg  [N*2-1:0] expected;
 
 %s mult (.u(a), .v(b), .r(c));
 
+reg [1:0] i;
+
 initial begin
-  for (integer i = 0; i < 3; i = i + 1) begin
+  for (i = 0; i < 3; i = i + 1) begin
     a = $unsigned($random) %% (2**N);
     b = $unsigned($random) %% (2**N);
     #10;
