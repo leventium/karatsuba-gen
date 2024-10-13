@@ -1,6 +1,7 @@
 #ifndef INCLUDE_SRC_KARATSUBA_GENARATOR_H_
 #define INCLUDE_SRC_KARATSUBA_GENARATOR_H_
 
+#include <random>
 #include <string>
 #include <vector>
 
@@ -10,6 +11,7 @@ struct RTLModule {
 };
 
 class KaratsubaGenarator {
+private:
   struct RTLKaratsubaNode {
     int length;
     std::string name;
@@ -21,10 +23,14 @@ class KaratsubaGenarator {
   static const std::string leaf3;
   static const std::string node;
   static const std::string tb;
+  static const std::string tb_loop;
+
+  static std::mt19937 mt_rand;
 
   std::vector<RTLKaratsubaNode> mem;
 
   std::string helper(int n);
+  std::string gen_rand_literal(int width);
 
 public:
   KaratsubaGenarator();

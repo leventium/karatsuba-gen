@@ -1,6 +1,8 @@
 #include "karatsuba_generator.h"
 #include <algorithm>
 #include <cstdio>
+#include <ctime>
+#include <random>
 #include <sstream>
 #include <string>
 
@@ -97,34 +99,36 @@ const std::string KaratsubaGenarator::node(
     "\n"
     "endmodule\n");
 
-const std::string KaratsubaGenarator::tb(
-    "`timescale 1ns/1ps\n"
-    "module tb #(\n"
-    "  parameter N = %d\n"
-    ");\n"
-    "\n"
-    "reg  [  N-1:0] a, b;\n"
-    "wire [N*2-1:0] c;\n"
-    "reg  [N*2-1:0] expected;\n"
-    "\n"
-    "%s mult (.u(a), .v(b), .r(c));\n"
-    "\n"
-    "reg [1:0] i;\n"
-    "\n"
-    "initial begin\n"
-    "  for (i = 0; i < 3; i = i + 1) begin\n"
-    "    a = $unsigned($random) %% (2**N);\n"
-    "    b = $unsigned($random) %% (2**N);\n"
-    "    #10;\n"
-    "    expected = a * b;\n"
-    "    if (c == expected)\n"
-    "      $display(\"%%d * %%d = %%d  --  Ok.\", a, b, c);\n"
-    "    else\n"
-    "      $display(\"%%d * %%d = %%d (%%d)  --  Fail.\", a, b, c, expected);\n"
-    "  end\n"
-    "end\n"
-    "\n"
-    "endmodule\n");
+const std::string KaratsubaGenarator::tb("`timescale 1ns/1ps\n"
+                                         "module tb #(\n"
+                                         "  parameter N = %d\n"
+                                         ");\n"
+                                         "\n"
+                                         "reg  [  N-1:0] a, b;\n"
+                                         "wire [N*2-1:0] c;\n"
+                                         "reg  [N*2-1:0] expected;\n"
+                                         "\n"
+                                         "%s mult (.u(a), .v(b), .r(c));\n"
+                                         "\n"
+                                         "reg [1:0] i;\n"
+                                         "\n"
+                                         "initial begin\n"
+                                         "%s\n"
+                                         "end\n"
+                                         "\n"
+                                         "endmodule\n");
+
+const std::string KaratsubaGenarator::tb_loop(
+    "  a = %s;\n"
+    "  b = %s;\n"
+    "  #10;\n"
+    "  expected = a * b;\n"
+    "  if (c == expected)\n"
+    "    $display(\"%%d * %%d = %%d  --  Ok.\", a, b, c);\n"
+    "  else\n"
+    "    $display(\"%%d * %%d = %%d (%%d)  --  Fail.\", a, b, c, expected);\n");
+
+std::mt19937 KaratsubaGenarator::mt_rand(std::time(nullptr));
 
 KaratsubaGenarator::KaratsubaGenarator() {
   mem.push_back({1, "karatsuba_leaf1", leaf1});
@@ -174,13 +178,32 @@ int KaratsubaGenarator::generate_multiplier(RTLModule &res, int n) {
   return 0;
 }
 
+std::string KaratsubaGenarator::gen_rand_literal(int width) {
+  std::uniform_int_distribution<> int_distr(0, 1);
+  std::stringstream ss;
+
+  ss << width << "'b";
+  for (int i = 0; i < width; ++i)
+    ss << int_distr(mt_rand);
+
+  return ss.str();
+}
+
 int KaratsubaGenarator::generate_testbench(RTLModule &res, int n,
                                            const std::string &top_name) {
   if (n < 1)
     return 1;
 
-  char buff[700];
-  std::snprintf(buff, 700, tb.c_str(), n, top_name.c_str());
+  char buff[2000];
+  std::stringstream ss;
+
+  for (int i = 0; i < 3; ++i) {
+    std::snprintf(buff, 1000, tb_loop.c_str(), gen_rand_literal(n).c_str(),
+                  gen_rand_literal(n).c_str());
+    ss << std::string(buff) << "\n";
+  }
+
+  std::snprintf(buff, 2000, tb.c_str(), n, top_name.c_str(), ss.str().c_str());
 
   res.name = "tb";
   res.verilog_description = buff;
